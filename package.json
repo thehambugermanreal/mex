@@ -1,0 +1,25 @@
+{
+  "name": "mex-ubg-proxy",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node render/server.js"
+  },
+  "dependencies": {
+    "@mercuryworkshop/bare-mux": "2.0.4",
+    "@mercuryworkshop/epoxy-transport": "3.0.1",
+    "@mercuryworkshop/wisp-js": "0.4.1",
+    "@titaniumnetwork-dev/ultraviolet": "3.2.10",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "ws": "8.18.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.1",
+    "vite": "5.4.8"
+  }
+}
