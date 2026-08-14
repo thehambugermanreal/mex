@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './styles.css';
 
 const DEFAULT_URL = 'https://example.com';
+const DEFAULT_WISP_URL = 'wss://mex-wisp.onrender.com/';
 const suggestions = [
   { label: 'Example', url: 'https://example.com', note: 'A calm place to start' },
   { label: 'Wikipedia', url: 'https://www.wikipedia.org', note: 'Explore something new' },
@@ -40,7 +41,7 @@ function normalizeUrl(value) {
 }
 
 function getWispUrl() {
-  const configured = import.meta.env.VITE_WISP_URL;
+  const configured = import.meta.env.VITE_WISP_URL || DEFAULT_WISP_URL;
   if (configured) return configured.endsWith('/') ? configured : `${configured}/`;
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   return `${protocol}//${window.location.host}/`;
@@ -71,7 +72,7 @@ function App() {
         return;
       }
       try {
-        await navigator.serviceWorker.register('/uv/sw.js', { scope: '/service/' });
+        await navigator.serviceWorker.register('/sw.js', { scope: '/service/' });
         const bareMuxUrl = '/baremux/index.mjs';
         const { BareMuxConnection } = await import(/* @vite-ignore */ bareMuxUrl);
         const connection = new BareMuxConnection('/baremux/worker.js');
@@ -118,6 +119,17 @@ function App() {
 
   return (
     <main className={`app ${hasBrowser ? 'app-browsing' : ''}`}>
+      {proxyState === 'starting' && (
+        <div className="activation-screen" role="status" aria-live="polite">
+          <div className="activation-card">
+            <div className="activation-logo"><LogoMark /></div>
+            <div className="activation-spinner" />
+            <p className="activation-title">Activating Wisp</p>
+            <p className="activation-copy">Warming the Render gateway<span className="loading-dots">...</span></p>
+            <span className="activation-endpoint">mex-wisp.onrender.com</span>
+          </div>
+        </div>
+      )}
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       <header className="topbar">
