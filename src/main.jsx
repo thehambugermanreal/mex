@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const WISP_URL = 'wss://mex-wisp.onrender.com';
+const WISP_URL = 'wss://mex-wisp.onrender.com/';
 const suggestions = [
   { label: 'Example', url: 'https://example.com', note: 'A calm place to start' },
   { label: 'Wikipedia', url: 'https://www.wikipedia.org', note: 'Explore something new' },
