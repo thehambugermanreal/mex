@@ -30,8 +30,14 @@
       console.error(`error while processing '${name}': `, err);
       port.postMessage({ type: "error", error: err });
   }
+  function normalizeHeaders(headers) {
+      if (!headers) return [];
+      if (Array.isArray(headers)) return headers;
+      if (typeof headers.entries === "function") return Array.from(headers.entries());
+      return Object.entries(headers);
+  }
   async function handleFetch(message, port, transport) {
-      const resp = await transport.request(new URL(message.fetch.remote), message.fetch.method, message.fetch.body, message.fetch.headers, null);
+      const resp = await transport.request(new URL(message.fetch.remote), message.fetch.method, message.fetch.body, normalizeHeaders(message.fetch.headers), null);
       if (!browserSupportsTransferringStreams() && resp.body instanceof ReadableStream) {
           const conversionResp = new Response(resp.body);
           resp.body = await conversionResp.arrayBuffer();
@@ -61,7 +67,7 @@
               message.websocket.channel.postMessage({ type: "message", args: [data] });
           }
       };
-      const [data, close] = transport.connect(new URL(message.websocket.url), message.websocket.origin, message.websocket.protocols, message.websocket.requestHeaders, onopen, onmessage, onclose, onerror);
+      const [data, close] = transport.connect(new URL(message.websocket.url), message.websocket.origin, message.websocket.protocols, normalizeHeaders(message.websocket.requestHeaders), onopen, onmessage, onclose, onerror);
       message.websocket.channel.onmessage = (event) => {
           if (event.data.type === "data") {
               data(event.data.data);

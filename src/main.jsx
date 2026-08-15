@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const DEFAULT_URL = 'https://example.com';
-const DEFAULT_WISP_URL = 'wss://mex-wisp.onrender.com/';
+const WISP_URL = 'wss://mex-wisp.onrender.com';
 const suggestions = [
   { label: 'Example', url: 'https://example.com', note: 'A calm place to start' },
   { label: 'Wikipedia', url: 'https://www.wikipedia.org', note: 'Explore something new' },
@@ -24,11 +23,13 @@ function Icon({ name }) {
   const paths = {
     arrow: <><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>,
     shield: <><path d="M12 3 5 6v5c0 4.4 2.9 8.2 7 9 4.1-.8 7-4.6 7-9V6l-7-3Z" /><path d="m9.5 12 1.7 1.7 3.5-3.7" /></>,
-    spark: <><path d="m12 3-1.2 5.8L5 10l5.8 1.2L12 17l1.2-5.8L19 10l-5.8-1.2L12 3Z" /><path d="m19 16-.5 2.5L16 19l2.5.5L19 22l.5-2.5L22 19l-2.5-.5L19 16Z" /></>,
-    back: <><path d="m15 18-6-6 6-6" /></>,
-    forward: <><path d="m9 18 6-6-6-6" /></>,
+    back: <path d="m15 18-6-6 6-6" />,
+    forward: <path d="m9 18 6-6-6-6" />,
     refresh: <><path d="M20 11a8.1 8.1 0 0 0-14.8-3L3 11" /><path d="M3 5v6h6" /><path d="M4 13a8.1 8.1 0 0 0 14.8 3L21 13" /><path d="M21 19v-6h-6" /></>,
     home: <><path d="m3 11 9-8 9 8" /><path d="M5 10v10h14V10" /><path d="M9 20v-6h6v6" /></>,
+    lock: <><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></>,
+    bookmark: <path d="M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18l-6-4-6 4V4Z" />,
+    menu: <><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></>,
   };
   return <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
 }
@@ -41,10 +42,7 @@ function normalizeUrl(value) {
 }
 
 function getWispUrl() {
-  const configured = import.meta.env.VITE_WISP_URL || DEFAULT_WISP_URL;
-  if (configured) return configured.endsWith('/') ? configured : `${configured}/`;
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  return `${protocol}//${window.location.host}/`;
+  return WISP_URL;
 }
 
 function App() {
@@ -57,11 +55,7 @@ function App() {
   });
 
   const hasBrowser = Boolean(frameUrl);
-  const statusLabel = useMemo(() => {
-    if (proxyState === 'ready') return 'Gateway ready';
-    if (proxyState === 'error') return 'Gateway needs attention';
-    return 'Warming the gateway';
-  }, [proxyState]);
+  const statusLabel = proxyState === 'ready' ? 'Gateway ready' : proxyState === 'error' ? 'Gateway offline' : 'Starting gateway';
 
   useEffect(() => {
     let active = true;
@@ -73,8 +67,8 @@ function App() {
       }
       try {
         await navigator.serviceWorker.register('/sw.js', { scope: '/service/' });
-        const bareMuxUrl = '/baremux/index.mjs';
-        const { BareMuxConnection } = await import(/* @vite-ignore */ bareMuxUrl);
+        const BareMuxConnection = window.BareMuxConnection;
+        if (!BareMuxConnection) throw new Error('BareMux failed to load.');
         const connection = new BareMuxConnection('/baremux/worker.js');
         await connection.setTransport('/epoxy/index.mjs', [{ wisp: getWispUrl() }]);
         await navigator.serviceWorker.ready;
@@ -124,61 +118,64 @@ function App() {
           <div className="activation-card">
             <div className="activation-logo"><LogoMark /></div>
             <div className="activation-spinner" />
-            <p className="activation-title">Activating Wisp</p>
-            <p className="activation-copy">Warming the Render gateway<span className="loading-dots">...</span></p>
-            <span className="activation-endpoint">mex-wisp.onrender.com</span>
+            <p className="activation-title">Activating mex</p>
+            <p className="activation-copy">Warming the gateway<span className="loading-dots">...</span></p>
           </div>
         </div>
       )}
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-      <header className="topbar">
-        <button className="brand" onClick={goHome} aria-label="Return to mex home">
-          <LogoMark small />
-          <span className="brand-copy"><strong>mex</strong><em>quietly browse</em></span>
-        </button>
-        <div className="topbar-actions">
-          <span className={`status-pill status-${proxyState}`}><span className="status-dot" />{statusLabel}</span>
-          <button className="round-button" onClick={() => openUrl(DEFAULT_URL)} aria-label="Open example.com"><Icon name="spark" /></button>
-        </div>
-      </header>
 
-      {!hasBrowser ? (
-        <section className="hero-shell">
-          <div className="hero-content">
-            <div className="eyebrow"><span className="eyebrow-line" /> A softer way to wander</div>
-            <h1>Browse with a little<br /><span>more breathing room.</span></h1>
-            <p className="hero-copy">A quiet, private-feeling web gateway with a glassy interface. Put a destination in the bar and let the rest fade away.</p>
-            <form className="search-card" onSubmit={handleSubmit}>
-              <div className="search-icon"><Icon name="shield" /></div>
-              <input value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Enter a web address..." aria-label="Web address" autoComplete="url" />
-              <button className="go-button" type="submit"><span>Go there</span><Icon name="arrow" /></button>
-            </form>
-            {proxyError && <p className="error-text">{proxyError}</p>}
-            <div className="suggestion-row">
-              {suggestions.map((suggestion) => <button className="suggestion" key={suggestion.url} onClick={() => openUrl(suggestion.url)}><span className="suggestion-label">{suggestion.label}</span><span>{suggestion.note}</span></button>)}
+      <div className="browser-window">
+        <header className="tabs-bar">
+          <button className="tab active-tab" onClick={goHome} aria-label="Return to mex new tab">
+            <span className="tab-glyph"><LogoMark small /></span><span>New Tab</span><span className="tab-close">×</span>
+          </button>
+          <button className="new-tab-button" aria-label="Open a new tab">+</button>
+        </header>
+        <div className="browser-toolbar">
+          <div className="browser-controls">
+            <button onClick={() => window.history.back()} aria-label="Back"><Icon name="back" /></button>
+            <button onClick={() => window.history.forward()} aria-label="Forward"><Icon name="forward" /></button>
+            <button onClick={() => document.querySelector('.proxy-frame')?.contentWindow.location.reload()} aria-label="Reload"><Icon name="refresh" /></button>
+            <button onClick={goHome} aria-label="Home"><Icon name="home" /></button>
+          </div>
+          <form className="address-bar" onSubmit={handleSubmit}>
+            <span className="address-lock"><Icon name="lock" /></span>
+            <input value={address} onChange={(event) => setAddress(event.target.value)} placeholder="mex://new" aria-label="Current web address" autoComplete="url" />
+            <button className="address-action" type="submit" aria-label="Bookmark page"><Icon name="bookmark" /></button>
+          </form>
+          <button className="menu-button" aria-label="Browser menu"><Icon name="menu" /></button>
+        </div>
+
+        {!hasBrowser ? (
+          <section className="home-page">
+            <div className="home-content">
+              <div className="eyebrow"><span className="eyebrow-line" /> A softer way to wander</div>
+              <h1>Browse with a little<br /><span>more breathing room.</span></h1>
+              <p className="home-copy">A quiet, private-feeling web gateway with a glassy interface. Put a destination in the bar and let the rest fade away.</p>
+              <form className="search-card" onSubmit={handleSubmit}>
+                <div className="search-icon"><Icon name="shield" /></div>
+                <input value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Enter a web address..." aria-label="Web address" autoComplete="url" />
+                <button className="go-button" type="submit"><span>Go there</span><Icon name="arrow" /></button>
+              </form>
+              {proxyError && <p className="error-text">{proxyError}</p>}
+              <div className="suggestion-row">
+                {suggestions.map((suggestion) => <button className="suggestion" key={suggestion.url} onClick={() => openUrl(suggestion.url)}><span className="suggestion-label">{suggestion.label}</span><span>{suggestion.note}</span></button>)}
+              </div>
             </div>
-          </div>
-          <div className="hero-art" aria-hidden="true">
-            <div className="art-glow" />
-            <div className="orbital orbital-a" /><div className="orbital orbital-b" />
-            <div className="glass-orb"><LogoMark /><span className="orb-caption">open space<br /><b>for thought</b></span></div>
-            <span className="star star-a">✦</span><span className="star star-b">✧</span><span className="star star-c">·</span>
-          </div>
-        </section>
-      ) : (
-        <section className="browser-shell">
-          <div className="browser-toolbar">
-            <div className="window-dots"><span /><span /><span /></div>
-            <div className="browser-controls"><button onClick={goHome} aria-label="Home"><Icon name="home" /></button><button onClick={() => window.history.back()} aria-label="Back"><Icon name="back" /></button><button onClick={() => window.history.forward()} aria-label="Forward"><Icon name="forward" /></button><button onClick={() => document.querySelector('.proxy-frame')?.contentWindow.location.reload()} aria-label="Reload"><Icon name="refresh" /></button></div>
-            <form className="address-bar" onSubmit={handleSubmit}><span className="address-lock"><Icon name="shield" /></span><input value={address} onChange={(event) => setAddress(event.target.value)} aria-label="Current web address" /><button type="submit" aria-label="Navigate"><Icon name="arrow" /></button></form>
-            <span className="browser-badge">UV / epoxy</span>
-          </div>
-          <div className="proxy-viewport"><iframe className="proxy-frame" title="Proxied web content" src={frameUrl} /></div>
-        </section>
-      )}
+            <div className="home-art" aria-hidden="true">
+              <div className="art-glow" />
+              <div className="orbital orbital-a" /><div className="orbital orbital-b" />
+              <div className="glass-orb"><LogoMark /><span className="orb-caption">open space<br /><b>for thought</b></span></div>
+              <span className="star star-a">✦</span><span className="star star-b">✧</span><span className="star star-c">·</span>
+            </div>
+          </section>
+        ) : (
+          <section className="proxy-viewport"><iframe className="proxy-frame" title="Proxied web content" src={frameUrl} /></section>
+        )}
+      </div>
 
-      <footer className="footer"><span>mex / 01</span><span className="footer-center"><i /> encrypted transport · ultraviolet gateway</span><span>{history.length ? `${history.length} recent ${history.length === 1 ? 'place' : 'places'}` : 'made for unhurried browsing'}</span></footer>
+      <div className="server-status"><span>Server:</span> <strong>{proxyState === 'ready' ? '116ms' : '—'}</strong><button aria-label="Refresh server status">↻</button></div>
+      <footer className="footer"><span>v2.0.1</span><span>GitHub</span><span>Night Discord</span><span>Mex Discord</span><span className="footer-spacer" /><span>{statusLabel}</span></footer>
     </main>
   );
 }

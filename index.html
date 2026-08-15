@@ -3,14 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#071d18" />
-    <meta name="description" content="A quiet, glassy web gateway." />
-    <title>mex — web gateway</title>
+    <meta name="theme-color" content="#061b17" />
+    <meta name="description" content="mex — a quiet new tab for unhurried browsing." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <title>mex://new</title>
   </head>
   <body>
     <div id="root"></div>
     <script src="/uv/uv.bundle.js"></script>
     <script src="/uv/uv.config.js"></script>
+    <script type="module" src="/baremux/bridge.mjs"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
