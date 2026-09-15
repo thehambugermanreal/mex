@@ -1,9 +1,12 @@
 node_modules/
 .next/
 out/
+dist/
 
 .env*
 !.env.example
+
+convex/_generated/
 
 *.tsbuildinfo
 npm-debug.log*
