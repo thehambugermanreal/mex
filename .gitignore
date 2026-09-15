@@ -6,8 +6,6 @@ dist/
 .env*
 !.env.example
 
-convex/_generated/
-
 *.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*
