@@ -3,11 +3,6 @@
   <h1>mex</h1>
   <p>A green little corner of the internet for games, apps, music, movies, and chatting.</p>
   <p>
-    <a href="https://github.com/thehambugermanreal/mex"><img src="https://img.shields.io/github/stars/thehambugermanreal/mex?style=for-the-badge&logo=github&logoColor=white&label=Star" alt="Star" /></a>
-    <a href="https://github.com/thehambugermanreal/mex/fork"><img src="https://img.shields.io/github/forks/thehambugermanreal/mex?style=for-the-badge&logo=github&logoColor=white&label=Fork" alt="Fork" /></a>
-    <a href="https://github.com/thehambugermanreal/mex/issues"><img src="https://img.shields.io/github/issues/thehambugermanreal/mex?style=for-the-badge&label=Issues" alt="Issues" /></a>
-  </p>
-  <p>
     <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
     <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
     <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
