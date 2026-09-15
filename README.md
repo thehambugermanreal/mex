@@ -1,6 +1,26 @@
-# mex
-
-A green little corner of the internet for games, apps, music, movies, and chatting. Built with React + Vite, proxied browsing through Scramjet, and Convex handling auth + chat.
+<div align="center">
+  <img src="public/favicon.svg" width="96" alt="mex logo" />
+  <h1>mex</h1>
+  <p>A green little corner of the internet for games, apps, music, movies, and chatting.</p>
+  <p>
+    <a href="https://github.com/thehambugermanreal/mex"><img src="https://img.shields.io/github/stars/thehambugermanreal/mex?style=for-the-badge&logo=github&logoColor=white&label=Star" alt="Star" /></a>
+    <a href="https://github.com/thehambugermanreal/mex/fork"><img src="https://img.shields.io/github/forks/thehambugermanreal/mex?style=for-the-badge&logo=github&logoColor=white&label=Fork" alt="Fork" /></a>
+    <a href="https://github.com/thehambugermanreal/mex/issues"><img src="https://img.shields.io/github/issues/thehambugermanreal/mex?style=for-the-badge&label=Issues" alt="Issues" /></a>
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
+    <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
+    <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Convex-backend-EE342F?style=flat-square&logo=convex&logoColor=white" alt="Convex" />
+    <img src="https://img.shields.io/badge/Scramjet-proxy-71e35d?style=flat-square" alt="Scramjet" />
+  </p>
+  <p>
+    <a href="#whats-inside"><img src="https://img.shields.io/badge/🎮_Games-0a1710?style=for-the-badge" alt="Games" /></a>
+    <a href="#whats-inside"><img src="https://img.shields.io/badge/💬_Chat-0a1710?style=for-the-badge" alt="Chat" /></a>
+    <a href="#whats-inside"><img src="https://img.shields.io/badge/🌐_Proxy-0a1710?style=for-the-badge" alt="Proxy" /></a>
+    <a href="#getting-started"><img src="https://img.shields.io/badge/🚀_Setup-b9fa8e?style=for-the-badge&logoColor=black" alt="Setup" /></a>
+  </p>
+</div>
 
 ## What's inside
 
