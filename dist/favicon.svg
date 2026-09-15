@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="saturnGreen" x1="10" x2="54" y1="8" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d3ff8f" />
+      <stop offset="0.45" stop-color="#71e35d" />
+      <stop offset="1" stop-color="#19a85d" />
+    </linearGradient>
+  </defs>
+  <ellipse cx="32" cy="34" rx="25" ry="8.5" fill="none" stroke="#65dd68" stroke-width="4" transform="rotate(-18 32 34)" opacity=".65" />
+  <circle cx="32" cy="29" r="15" fill="url(#saturnGreen)" />
+  <ellipse cx="32" cy="34" rx="26" ry="8.5" fill="none" stroke="#a5f77a" stroke-width="3.5" transform="rotate(-18 32 34)" />
+</svg>

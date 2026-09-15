@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 580">
+  <defs>
+    <radialGradient id="orbitPlanet" cx="35%" cy="28%" r="80%">
+      <stop offset="0" stop-color="#e6ffa8" />
+      <stop offset="0.25" stop-color="#a4ec7d" />
+      <stop offset="0.55" stop-color="#4cc46c" />
+      <stop offset="0.85" stop-color="#0e6b43" />
+      <stop offset="1" stop-color="#0a5a38" />
+    </radialGradient>
+    <radialGradient id="orbitSpec" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#f4ffd6" stop-opacity=".85" />
+      <stop offset="1" stop-color="#f4ffd6" stop-opacity="0" />
+    </radialGradient>
+    <filter id="orbitGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="42" />
+    </filter>
+  </defs>
+  <circle cx="290" cy="290" r="118" fill="#41ca6a" opacity=".12" filter="url(#orbitGlow)" />
+  <ellipse cx="290" cy="290" rx="250" ry="85" transform="rotate(-25 290 290)" fill="none" stroke="#8bef91" stroke-width="1.5" opacity=".35" />
+  <ellipse cx="290" cy="290" rx="175" ry="112" transform="rotate(37 290 290)" fill="none" stroke="#a0f99c" stroke-width="1.5" opacity=".22" />
+  <circle cx="290" cy="290" r="72" fill="url(#orbitPlanet)" />
+  <ellipse cx="266" cy="262" rx="30" ry="21" transform="rotate(-30 266 262)" fill="url(#orbitSpec)" />
+  <path d="M 228 264 A 72 72 0 0 1 352 264" fill="none" stroke="#e0ffae" stroke-width="1.5" opacity=".4" />
+</svg>

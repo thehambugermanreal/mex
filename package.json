@@ -4,23 +4,29 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
     "@mercuryworkshop/epoxy-tls": "^2.1.19-1",
     "@mercuryworkshop/epoxy-transport": "^3.0.1",
-    "@mercuryworkshop/scramjet": "^2.0.0-alpha",
+    "@mercuryworkshop/scramjet": "2.0.67-alpha.2",
+    "@mercuryworkshop/scramjet-controller": "^0.0.14",
+    "@mercuryworkshop/scramjet-utils": "^0.0.3",
     "@mercuryworkshop/wisp-js": "^0.4.1",
+    "convex": "^1.45.0",
+    "emoji-mart": "^5.6.0",
     "lucide-react": "latest",
-    "next": "^16.1.5",
     "react": "latest",
     "react-dom": "latest",
     "typescript": "latest"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5"
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.2.2"
   }
 }
