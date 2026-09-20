@@ -40,6 +40,10 @@ input[type='text'], input[type='password'], input:not([type]), textarea { cursor
 .server-gate-mark .saturn-logo { width: 40px; height: 40px; }
 .server-gate h1 { margin: 0; font-size: clamp(48px, 7vw, 86px); }
 .server-gate p { max-width: 460px; margin: 0; color: var(--text-soft); font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.7; }
+.gate-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.corner-tags { position: fixed; right: 12px; bottom: 10px; z-index: 50; display: flex; gap: 8px; }
+.version-tag { padding: 4px 10px; border: 1px solid rgba(165, 231, 177, .35); border-radius: 999px; background: rgba(7, 16, 13, .7); color: var(--text-soft); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .08em; text-decoration: none; opacity: .85; }
+.version-tag:hover { opacity: 1; }
 
 .app-shell {
   min-height: 100vh;

@@ -78,7 +78,7 @@ type ChatReply = {
   deleted: boolean
 } | null
 
-type Accent = 'mint' | 'aqua' | 'lilac' | 'amber'
+type Accent = 'mint' | 'aqua' | 'lilac' | 'amber' | 'rose' | 'sky'
 type FontChoice = 'manrope' | 'system' | 'mono'
 type ThemeChoice = 'green' | 'pitch'
 type Density = 'comfortable' | 'compact'
@@ -129,6 +129,8 @@ const accentHex: Record<Accent, string> = {
   aqua: '#8ef4fa',
   lilac: '#d3a6ff',
   amber: '#ffd98a',
+  rose: '#ff9ecf',
+  sky: '#8ec9fa',
 }
 
 const fontStacks: Record<FontChoice, string> = {
@@ -275,7 +277,7 @@ function storedWispUrl() {
     return undefined
   }
 }
-const wispUrl = import.meta.env.NEXT_PUBLIC_WISP_URL || import.meta.env.VITE_WISP_URL || storedWispUrl() || 'wss://mex-ubg-wisp.onrender.com/wisp/'
+const wispUrl = storedWispUrl() || 'wss://mex-ubg-wisp.onrender.com/wisp/'
 const movieEmbedUrl = `/embed.html?url=${encodeURIComponent('https://cinemaos.tech')}`
 const musicEmbedUrl = `/embed.html?url=${encodeURIComponent('https://listenfree.in/')}`
 const aiEmbedUrl = `/embed.html?url=${encodeURIComponent('https://duck.ai')}`
@@ -480,6 +482,7 @@ function cleanConvexError(error: unknown) {
 
 function App() {
   const [serverReady, setServerReady] = useState(false)
+  const [wispStuck, setWispStuck] = useState(false)
   const [view, setView] = useState<View>('home')
   const viewRef = useRef(view)
   useEffect(() => {
@@ -607,6 +610,22 @@ function App() {
       .catch(() => undefined)
     return () => controller.abort()
   }, [])
+
+  useEffect(() => {
+    if (serverReady) return
+    const timer = window.setTimeout(() => setWispStuck(true), 60000)
+    return () => window.clearTimeout(timer)
+  }, [serverReady])
+
+  const clearWispSetting = () => {
+    try {
+      localStorage.removeItem('mex-wisp')
+    } catch {
+      /* storage unavailable */
+    }
+    setWispInput('')
+    window.location.reload()
+  }
 
   const fetchGames = useCallback(async (search = '') => {
     setLoading(true)
@@ -951,8 +970,18 @@ function App() {
       <main className="server-gate">
         <div className="server-gate-mark"><img src="/favicon.svg" alt="mex logo" className="saturn-logo" /></div>
         <div className="eyebrow"><span className="eyebrow-line" /> MEX / LINK</div>
-        <h1>Connecting to server...</h1>
-        <LoaderCircle size={22} className="spin" />
+        <h1>{wispStuck ? 'Stuck connecting...' : 'Connecting to server...'}</h1>
+        {wispStuck ? (
+          <>
+            <p>Stuck. Refresh, or clear the Wisp setting if you changed it in Settings.</p>
+            <div className="gate-actions">
+              <button className="settings-btn" onClick={() => window.location.reload()}>Refresh</button>
+              <button className="settings-btn" onClick={clearWispSetting}>Clear Wisp setting</button>
+            </div>
+          </>
+        ) : (
+          <LoaderCircle size={22} className="spin" />
+        )}
       </main>
     )
   }
@@ -961,6 +990,10 @@ function App() {
     <main className={`app-shell${settings.grid ? '' : ' no-grid'}${settings.ambient ? '' : ' no-ambient'}`}>
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
+      <div className="corner-tags">
+        <a className="version-tag" href="https://github.com/thehambugermanreal/mex" target="_blank" rel="noreferrer">v0 · GitHub</a>
+        <a className="version-tag" href="https://discord.gg/fBGeYeZuMR" target="_blank" rel="noreferrer">Discord</a>
+      </div>
       <header className="site-header">
         <button className="brand" onClick={() => setView('home')} aria-label="Go to Mex home">
           <img src="/favicon.svg" alt="mex logo" className="saturn-logo" />
@@ -1431,7 +1464,7 @@ function App() {
                   }}
                   aria-label="Games per page"
                 >
-                  {[12, 20, 30, 48].map((n) => (
+                  {[12, 20, 30, 48, 60, 100].map((n) => (
                     <option key={n} value={n}>{n}</option>
                   ))}
                 </select>
@@ -1481,6 +1514,14 @@ function App() {
               <h2>General</h2>
               <p className="settings-note">Wipe every local preference on this device back to defaults. Your account is untouched.</p>
               <button className="settings-btn" onClick={resetSettings}>Reset all settings</button>
+            </div>
+            <div className="settings-card">
+              <h2>DMCA</h2>
+              <p className="settings-note">To report copyright infringement, contact <a href="mailto:dmca@InboxOrigin.com">dmca@InboxOrigin.com</a> with the work, the infringing URL.</p>
+            </div>
+            <div className="settings-card">
+              <h2>Credits</h2>
+              <p className="settings-note">Games by LuminSDK · Proxy by Mercury Workshop (Scramjet, Epoxy, Wisp) · Backend by Convex · UI built with React, Vite, lucide-react and emoji-mart · Type in Manrope and DM Mono · Placeholder art via Unsplash · AI by Duck.ai, music by ListenFree, movies by CinemaOS.</p>
             </div>
           </div>
         </section>

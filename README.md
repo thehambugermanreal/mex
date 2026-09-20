@@ -30,7 +30,7 @@
 - **AI / Music / Movie** — Duck.ai, ListenFree, and CinemaOS embedded through the proxy.
 - **Chat** — global chat room. Sign in with a username + password (no email, no verification). Delete, edit, reply, and emoji reactions included.
 - **Proxy** — full Scramjet browser tab with address bar, back/forward/reload. Type a bare word to search with your chosen engine.
-- **Settings** — account stuff (change username/password, delete account), appearance (accent, theme, font, density, grid, orbs, cursor, motion), chat prefs, games per page, proxy homepage/search engine/Wisp override. Saved on-device.
+- **Settings** — account stuff (change username/password, delete account), appearance (accent, theme, font, density, grid, orbs, cursor, motion), chat prefs, games per page, proxy homepage/search engine/Wisp override, plus DMCA and Credits cards. Saved on-device.
 
 ## Stack
 
@@ -53,13 +53,9 @@ npm run dev            # the site (http://localhost:5173)
 npx convex dev         # backend — pushes functions, syncs types
 ```
 
-On first `convex dev` run it asks you to log in and provisions a dev deployment, then writes the URL to `.env.local` as `VITE_CONVEX_URL`. That's the only env var the client needs:
+On first `convex dev` run it asks you to log in and provisions a dev deployment. The client doesn't need any env vars — the Convex URL and the default Wisp URL are hardcoded in `src/main.tsx` and `src/App.tsx`.
 
-```
-VITE_CONVEX_URL="https://<yours>.convex.cloud"
-```
-
-The proxy side uses a Wisp server. Default is the hosted one in `.env` (`NEXT_PUBLIC_WISP_URL`), or point it at your own — there's a ready-to-deploy one in `render/` (see `render/render.yaml`), and you can override it per-device in Settings → Proxy.
+The proxy side uses a Wisp server (default `wss://mex-ubg-wisp.onrender.com/wisp/`). Host your own with the ready-to-deploy server in `render/` (see `render/render.yaml`), and override it per-device in Settings → Proxy. If the loading screen is stuck on Wisp for 60s, it offers Refresh and Clear Wisp setting buttons.
 
 Other commands:
 
@@ -79,8 +75,13 @@ convex/         schema + queries/mutations (auth, messages)
 render/         standalone Wisp server for hosting
 ```
 
+## License
+
+GNU Affero General Public License v3 — see `LICENSE`.
+
 ## Notes
 
+- DMCA contact: dmca@InboxOrigin.com.
 - Game URLs from Lumin are single-use — if one fails to load, just click it again.
 - Some sites refuse to be iframed or proxied no matter what; that's on them, not us.
 - Passwords are salted SHA-256. Fine for a side project, swap in something slower (scrypt/bcrypt) if this ever matters.
