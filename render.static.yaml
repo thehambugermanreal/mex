@@ -1,5 +1,5 @@
 services:
-  - type: static
+  - type: web
     name: mex
     env: static
     buildCommand: npm install && npm run build
